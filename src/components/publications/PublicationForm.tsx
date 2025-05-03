@@ -1,10 +1,15 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useMutation } from "@tanstack/react-query";
-import { updatePublication, createPublication, Publication } from "@/services/api";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { 
+  updatePublication, 
+  createPublication, 
+  Publication, 
+  getCategories 
+} from "@/services/api";
 import {
   Form,
   FormControl,
@@ -16,7 +21,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, XCircle, ImagePlus } from "lucide-react";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
+import { Loader2, XCircle, ImagePlus, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 
 const publicationSchema = z.object({
@@ -37,6 +49,12 @@ const PublicationForm = ({ publication, onSuccess }: PublicationFormProps) => {
   const [photoPreview, setPhotoPreview] = useState<string | null>(
     publication?.fotos && publication.fotos.length > 0 ? publication.fotos[0] : null
   );
+
+  // Fetch categories
+  const { data: categories = [] } = useQuery({
+    queryKey: ["categories"],
+    queryFn: getCategories,
+  });
 
   const form = useForm<PublicationFormValues>({
     resolver: zodResolver(publicationSchema),
@@ -129,9 +147,23 @@ const PublicationForm = ({ publication, onSuccess }: PublicationFormProps) => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Category</FormLabel>
-                <FormControl>
-                  <Input placeholder="e.g. News, Event, Article" {...field} />
-                </FormControl>
+                <Select 
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {categories.map((category) => (
+                      <SelectItem key={category.id} value={category.nome}>
+                        {category.nome}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}

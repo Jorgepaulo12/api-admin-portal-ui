@@ -1,4 +1,3 @@
-
 import { toast } from "sonner";
 
 const API_BASE_URL = 'http://127.0.0.1:8000';
@@ -43,6 +42,13 @@ export type Subscriber = {
   id: number;
   email: string;
   created_at: string;
+};
+
+export type Category = {
+  id: number;
+  nome: string;
+  created_at: string;
+  updated_at: string;
 };
 
 export const login = async (credentials: LoginCredentials): Promise<Token> => {
@@ -287,6 +293,25 @@ export const getSubscribers = async (): Promise<Subscriber[]> => {
     return await response.json();
   } catch (error) {
     console.error('Error fetching subscribers:', error);
+    throw error;
+  }
+};
+
+export const getCategories = async (): Promise<Category[]> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/categorias/?skip=0&limit=100`, {
+      headers: {
+        'accept': 'application/json'
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch categories');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching categories:', error);
     throw error;
   }
 };
