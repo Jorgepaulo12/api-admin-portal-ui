@@ -23,6 +23,7 @@ const queryClient = new QueryClient({
   },
 });
 
+// ProtectedRoute component properly using useAuth after the AuthProvider is mounted
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, loading } = useAuth();
   
@@ -37,6 +38,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
+// Routes component using useAuth
 const AppRoutes = () => {
   const { isAuthenticated } = useAuth();
   
@@ -77,17 +79,18 @@ const AppRoutes = () => {
   );
 };
 
+// App component with proper order of providers
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
       <BrowserRouter>
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
-          <AuthProvider>
+        <AuthProvider>
+          <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
             <AppRoutes />
-          </AuthProvider>
-        </Suspense>
+            <Toaster />
+            <Sonner />
+          </Suspense>
+        </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
