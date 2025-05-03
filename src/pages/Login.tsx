@@ -38,7 +38,11 @@ const Login = () => {
   const onSubmit = async (values: LoginFormValues) => {
     setIsLoading(true);
     try {
-      await login(values);
+      // Ensure that both username and password are passed as required
+      await login({
+        username: values.username,
+        password: values.password
+      });
     } catch (error) {
       console.error(error);
     } finally {

@@ -11,6 +11,7 @@ import Members from "./pages/Members";
 import Publications from "./pages/Publications";
 import Subscribers from "./pages/Subscribers";
 import NotFound from "./pages/NotFound";
+import Index from "./pages/Index";
 import { Suspense } from "react";
 
 const queryClient = new QueryClient({
@@ -41,12 +42,10 @@ const AppRoutes = () => {
   
   return (
     <Routes>
+      <Route path="/" element={<Index />} />
+      
       <Route path="/login" element={
         isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login />
-      } />
-      
-      <Route path="/" element={
-        <Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />
       } />
       
       <Route path="/dashboard" element={
