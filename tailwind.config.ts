@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,12 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				amodes: {
+					DEFAULT: '#1EAEDB',  // Main turquoise blue color from the image
+					light: '#33C3F0',
+					dark: '#0FA0CE',
+					background: '#E6F8FD'
 				}
 			},
 			borderRadius: {
